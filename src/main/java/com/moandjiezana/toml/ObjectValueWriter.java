@@ -6,6 +6,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 import static com.moandjiezana.toml.MapValueWriter.MAP_VALUE_WRITER;
+import static com.moandjiezana.toml.TableArrayValueWriter.TABLE_ARRAY_VALUE_WRITER;
 import static com.moandjiezana.toml.ValueWriters.WRITERS;
 
 class ObjectValueWriter implements ValueWriter {
@@ -74,7 +75,7 @@ class ObjectValueWriter implements ValueWriter {
         for (Annotation a : field.getAnnotations()) {
           if (a instanceof TomlComment) {
             TomlComment comment = (TomlComment) a;
-            if (valueWriter == OBJECT_VALUE_WRITER)
+            if (valueWriter == OBJECT_VALUE_WRITER || valueWriter == TABLE_ARRAY_VALUE_WRITER)
               objComments.add(comment.value());
             else
               comments.add(comment.value());
@@ -82,7 +83,7 @@ class ObjectValueWriter implements ValueWriter {
           }
         }
       } else {
-        if (valueWriter == OBJECT_VALUE_WRITER)
+        if (valueWriter == OBJECT_VALUE_WRITER || valueWriter == TABLE_ARRAY_VALUE_WRITER)
           objComments.add(null);
         else
           comments.add(null);

@@ -72,7 +72,7 @@ class MapValueWriter implements ValueWriter {
       final boolean hasComment = (valueComments != null) && !valueComments.isEmpty() && valueComments.size() > comment && valueComments.get(comment) != null;
       ValueWriter valueWriter = WRITERS.findWriterFor(fromValue);
       if (hasComment) {
-        if (valueWriter != ObjectValueWriter.OBJECT_VALUE_WRITER)
+        if (valueWriter != ObjectValueWriter.OBJECT_VALUE_WRITER && valueWriter != TABLE_ARRAY_VALUE_WRITER)
           addComments(valueComments.get(comment), context);
       }
       if (valueWriter.isPrimitiveType()) {
@@ -98,10 +98,15 @@ class MapValueWriter implements ValueWriter {
       }
 
       ValueWriter valueWriter = WRITERS.findWriterFor(fromValue);
+      final boolean hasComment = (objComments != null) && !objComments.isEmpty() && objComments.size() > comment && objComments.get(comment) != null;
       if (valueWriter == this || valueWriter == TABLE_ARRAY_VALUE_WRITER) {
+        if (hasComment) {
+          context.write('\n');
+          addComments(objComments.get(comment), context);
+        }
         valueWriter.write(fromValue, context.pushTable(quoteKey(key)));
+        comment++;
       } else if (valueWriter == ObjectValueWriter.OBJECT_VALUE_WRITER) {
-        final boolean hasComment = (objComments != null) && !objComments.isEmpty() && objComments.size() > comment && objComments.get(comment) != null;
         ((ObjectValueWriter) valueWriter).write(fromValue, context.pushTable(quoteKey(key)), hasComment ? objComments.get(comment) : null);
         comment++;
       }
