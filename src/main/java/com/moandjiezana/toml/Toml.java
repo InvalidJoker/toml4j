@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 
 /**
@@ -40,8 +41,8 @@ import com.google.gson.JsonElement;
  *
  */
 public class Toml {
-  
-  private static final Gson DEFAULT_GSON = new Gson();
+
+  private static final Gson DEFAULT_GSON = new GsonBuilder().setFieldNamingStrategy(KeyFieldNamingStrategy.INSTANCE).create();
 
   private Map<String, Object> values = new HashMap<String, Object>();
   private final Toml defaults;
