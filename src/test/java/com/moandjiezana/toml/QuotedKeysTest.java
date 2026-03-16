@@ -1,9 +1,7 @@
 package com.moandjiezana.toml;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 import java.util.Map;
 
@@ -59,7 +57,15 @@ public class QuotedKeysTest {
     assertNull(quoted.ʎǝʞ);
     assertEquals("value", quoted.map.get("\"ʎǝʞ\""));
   }
-  
+
+  @Test
+  public void should_support_field_name_has_underline() {
+      Key tomlInstance = new Toml().read("test-name=\"Hello World!!\"").to(Key.class);
+
+      assertNotNull(tomlInstance.testName);
+      assertEquals(tomlInstance.testName, "Hello World!!");
+  }
+
   @Test
   public void should_support_table_array_index_with_quoted_key() throws Exception {
     Toml toml = new Toml().read("[[ dog. \" type\" ]] \n  name = \"type0\"  \n  [[dog.\" type\"]]  \n  name = \"type1\"");
@@ -133,5 +139,10 @@ public class QuotedKeysTest {
     String ʎǝʞ;
     
     Map<String, Object> map;
+  }
+
+  private static class Key {
+      @TomlKey("test-name")
+      String testName;
   }
 }
